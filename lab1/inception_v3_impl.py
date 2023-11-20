@@ -219,10 +219,7 @@ class InceptionV3(nn.Module):
 
     def forward(self, x):
         x = self.back_bone0(x)
-        side_head = None
-        if (self.training):
-            side_head = self.side_head(x)
         x = self.back_bone1(x)
         x = self.fc(x)
 
-        return x, side_head
+        return x

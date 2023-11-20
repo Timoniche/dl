@@ -33,8 +33,8 @@ class InceptionModelV3(nn.Module):
         x = self.normalize(x)
         x = self.inception_v3(x)
 
-        if self.training:
-            return x.logits
+        # if self.training:
+        #     return x.logits
 
         return x
 

@@ -29,10 +29,11 @@ def run_inception_v3():
         classification_layer_path=None,
     )
 
+    max_epochs = 100
     _run_model_on_datamodule(
         model=inception_v3,
         datamodule=datamodule,
-        max_epochs=1,
+        max_epochs=max_epochs,
         save_classification_layer=True,
         checkpoint_path=None
     )
