@@ -41,7 +41,7 @@ def run_inception_v3():
     datamodule = DataModule(
         root=dataset_dir,
         image_size=299,  # ImageNet pretrained with (3 x 299 x 299)
-        batch_size=1 << 6,
+        batch_size=30,
         train_class_dict=training_class_dict,
         test_class_dict=test_class_dict,
     )
