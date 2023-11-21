@@ -1,3 +1,7 @@
 /venv/
 .idea
 lab1/lightning_logs
+/lab1/cars_dataset/cars_annos.mat
+/lab1/cars_dataset/old/
+/lab1/cars_dataset/cars_test/
+/lab1/cars_dataset/cars_train/

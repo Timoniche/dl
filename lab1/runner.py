@@ -7,6 +7,7 @@ import pytorch_lightning as pl
 
 from pytorch_lightning.loggers import CSVLogger
 from torch import nn
+from scipy.io import loadmat
 
 from lab1.classifier import Classifier
 from lab1.datamodule import DataModule
@@ -16,11 +17,33 @@ from lab1.plotter_utils import plot_metrics
 
 def run_inception_v3():
     current_dir = str(pathlib.Path().resolve())
-    root = current_dir + '/CarDatasets/dataset/Images'
+    dataset_dir = current_dir + '/cars_dataset'
+
+    # train_imgs = os.listdir(dataset_dir + '/cars_train')
+    # test_imgs = os.listdir(dataset_dir + '/cars_test')
+
+    cars_test_annos = loadmat(dataset_dir + '/cars_test_annos_withlabels_eval.mat')
+    cars_train_annos = loadmat(dataset_dir + '/cars_train_annos.mat')
+    # cars_meta = loadmat(dataset_dir + '/cars_meta.mat')
+
+    # class_names = [meta[0] for meta in cars_meta['class_names'][0]]
+    training_class_dict = {}
+    test_class_dict = {}
+
+    for ann in cars_train_annos['annotations'][0]:
+        image, label = ann[-1][0], ann[-2][0][0] - 1
+        training_class_dict[image] = label
+
+    for ann in cars_test_annos['annotations'][0]:
+        image, label = ann[-1][0], ann[-2][0][0] - 1
+        test_class_dict[image] = label
+
     datamodule = DataModule(
-        root=root,
+        root=dataset_dir,
         image_size=299,  # ImageNet pretrained with (3 x 299 x 299)
         batch_size=1 << 6,
+        train_class_dict=training_class_dict,
+        test_class_dict=test_class_dict,
     )
     num_classes = datamodule.num_classes
     inception_v3 = InceptionModelV3(
@@ -29,7 +52,7 @@ def run_inception_v3():
         classification_layer_path=None,
     )
 
-    max_epochs = 100
+    max_epochs = 1
     _run_model_on_datamodule(
         model=inception_v3,
         datamodule=datamodule,
